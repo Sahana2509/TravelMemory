@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="960" viewBox="0 0 1600 960" role="img" aria-labelledby="title description">
+  <title id="title">TravelMemory AWS deployment architecture</title>
+  <desc id="description">Users access a frontend through optional Cloudflare and a frontend load balancer. Two frontend EC2 instances call a backend load balancer that distributes requests to two backend EC2 instances. Both backend instances connect to MongoDB Atlas.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#536575"/></marker>
+    <marker id="apiArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#D83B40"/></marker>
+    <marker id="dbArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#3A9A62"/></marker>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#17212B}
+      .title{font-size:30px;font-weight:700}
+      .subtitle{font-size:16px;fill:#62707C}
+      .node-title{font-size:20px;font-weight:700}
+      .node-detail{font-size:14px;fill:#52616D}
+      .group-label{font-size:15px;font-weight:700;fill:#284A60}
+      .edge-label{font-size:14px;font-weight:600;fill:#536575}
+      .api-label{font-size:15px;font-weight:700;fill:#A32930}
+      .db-label{font-size:13px;font-weight:600;fill:#267344}
+    </style>
+  </defs>
+  <rect width="1600" height="960" fill="#F5F7F9"/>
+  <text class="title" x="60" y="65">TravelMemory | AWS Deployment Architecture</text>
+  <text class="subtitle" x="60" y="98">Two frontend instances, two backend instances, managed MongoDB</text>
+
+  <rect x="60" y="250" width="210" height="130" rx="12" fill="#FFFFFF" stroke="#B9C4CE" stroke-width="2"/>
+  <text class="node-title" x="165" y="305" text-anchor="middle">Users / Browser</text>
+  <text class="node-detail" x="165" y="337" text-anchor="middle">HTTP requests</text>
+
+  <rect x="380" y="250" width="270" height="130" rx="12" fill="#FDE6E5" stroke="#D83B40" stroke-width="2"/>
+  <text class="node-title" x="515" y="293" text-anchor="middle">Frontend ALB</text>
+  <text class="node-detail" x="515" y="322" text-anchor="middle">travelmemory-frontend-alb</text>
+  <text class="node-detail" x="515" y="347" text-anchor="middle">Listener: HTTP :80</text>
+
+  <rect x="710" y="195" width="830" height="245" rx="14" fill="#F1F7FB" stroke="#6D9BB8" stroke-width="2" stroke-dasharray="9 6"/>
+  <text class="group-label" x="1125" y="229" text-anchor="middle">TARGET GROUP: travelmemory-frontend-tg | HTTP :80 | HEALTH CHECK: /</text>
+  <rect x="750" y="270" width="330" height="115" rx="10" fill="#FFFFFF" stroke="#6D9BB8" stroke-width="2"/>
+  <text class="node-title" x="915" y="315" text-anchor="middle" font-size="17">frontend-master</text>
+  <text class="node-detail" x="915" y="345" text-anchor="middle">EC2 | Nginx :80</text>
+  <rect x="1150" y="270" width="330" height="115" rx="10" fill="#FFFFFF" stroke="#6D9BB8" stroke-width="2"/>
+  <text class="node-title" x="1315" y="315" text-anchor="middle" font-size="17">frontend-2</text>
+  <text class="node-detail" x="1315" y="345" text-anchor="middle">EC2 | Nginx :80</text>
+
+  <path d="M270 315 H380" fill="none" stroke="#536575" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M650 315 H710" fill="none" stroke="#536575" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="260" y="660" width="280" height="135" rx="12" fill="#FDE6E5" stroke="#D83B40" stroke-width="2"/>
+  <text class="node-title" x="400" y="705" text-anchor="middle">Backend ALB</text>
+  <text class="node-detail" x="400" y="734" text-anchor="middle">travelmemory-backend-alb</text>
+  <text class="node-detail" x="400" y="758" text-anchor="middle">Listener: HTTP :80</text>
+
+  <rect x="650" y="600" width="580" height="260" rx="14" fill="#F1F7FB" stroke="#6D9BB8" stroke-width="2" stroke-dasharray="9 6"/>
+  <text class="group-label" x="940" y="635" text-anchor="middle">TARGET GROUP: travelmemory-backend-tg | HTTP :80 | HEALTH CHECK: GET /health</text>
+  <rect x="690" y="670" width="500" height="75" rx="10" fill="#FFFFFF" stroke="#6D9BB8" stroke-width="2"/>
+  <text class="node-title" x="940" y="700" text-anchor="middle" font-size="16">backend-master</text>
+  <text class="node-detail" x="940" y="725" text-anchor="middle">EC2 | Nginx :80 | Node.js :3000 via systemd</text>
+  <rect x="690" y="765" width="500" height="75" rx="10" fill="#FFFFFF" stroke="#6D9BB8" stroke-width="2"/>
+  <text class="node-title" x="940" y="795" text-anchor="middle" font-size="16">backend-2 (from AMI)</text>
+  <text class="node-detail" x="940" y="820" text-anchor="middle">EC2 | Nginx :80 | Node.js :3000 via systemd</text>
+
+  <rect x="1350" y="660" width="210" height="135" rx="12" fill="#E4F5EA" stroke="#3A9A62" stroke-width="2"/>
+  <text class="node-title" x="1455" y="712" text-anchor="middle">MongoDB Atlas</text>
+  <text class="node-detail" x="1455" y="744" text-anchor="middle">Application database</text>
+
+  <path d="M1125 440 V500 H400 V660" fill="none" stroke="#D83B40" stroke-width="3" marker-end="url(#apiArrow)"/>
+  <rect x="655" y="483" width="150" height="34" rx="17" fill="#FDE6E5"/>
+  <text class="api-label" x="730" y="506" text-anchor="middle">API requests</text>
+
+  <path d="M540 725 H620 V707 H690" fill="none" stroke="#536575" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M620 725 V802 H690" fill="none" stroke="#536575" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M1190 707 H1350" fill="none" stroke="#3A9A62" stroke-width="3" marker-end="url(#dbArrow)"/>
+  <path d="M1190 802 H1260 V760 H1350" fill="none" stroke="#3A9A62" stroke-width="3" marker-end="url(#dbArrow)"/>
+
+  <text class="subtitle" x="60" y="900">backend-2 and frontend-2 are launched from their respective AMIs. Cloudflare is not used.</text>
+  <text class="subtitle" x="60" y="928">Production note: use HTTPS and restrict instance/database access to trusted sources.</text>
+</svg>
